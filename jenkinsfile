@@ -2,18 +2,54 @@ pipeline {
     agent any
 
     stages {
-        stage('Run Python Script') {
+        stage('Checkout') {
             steps {
-                dir('/home/ubuntu/test') {
-                    sh 'python3 test.py'
+                
+                checkout scm
+            }
+        }
+
+        stage('Set up Python environment') {
+            steps {
+                script {
+                   
+                    sh 'sudo apt update'
+                    sh 'sudo apt install -y python3-venv'
+
+                    // Create virtual environment
+                    sh 'python3 -m venv venv'
+                }
+            }
+        }
+
+        stage('Activate virtual environment and install requirements') {
+            steps {
+                script {
+                   
+                    sh 'source venv/bin/activate'
+
+                    // Install project dependencies using requirements.txt
+                    sh 'pip install -r requirements.txt'
+                }
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                script {
+                   
+                    sh 'python your_test_script.py'
                 }
             }
         }
     }
 
     post {
+        success {
+            echo 'Build and tests passed! Deploy or do further actions here.'
+        }
         failure {
-            echo 'Build failed! Notify the team or take appropriate actions.'
+            echo 'Build or tests failed. Take appropriate actions.'
         }
     }
 }
