@@ -38,7 +38,7 @@ pipeline {
             steps {
                 script {
                    
-                    sh 'python your_test_script.py'
+                    sh 'python3 test.py'
                 }
             }
         }
