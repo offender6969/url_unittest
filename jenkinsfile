@@ -1,0 +1,19 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Run Python Script') {
+            steps {
+                dir('/home/ubuntu/test') {
+                    sh 'python3 test.py'
+                }
+            }
+        }
+    }
+
+    post {
+        failure {
+            echo 'Build failed! Notify the team or take appropriate actions.'
+        }
+    }
+}
